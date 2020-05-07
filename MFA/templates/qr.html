@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block content %}
+    <small class="text-muted">Scan with your Google Authenticator</small></br>
+    <img src='../static/QR/{{ id }}.png' width="45%"></br>
+    <small class="text-muted">
+    Done? Login again<a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+    </small>
+{% endblock content %}

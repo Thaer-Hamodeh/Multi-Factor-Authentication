@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1>Take Photo</h1>
+<input class="btn btn-outline-info" id="button" type="button" value="Take Photo">
+<div class="row">
+  <div class="column">
+    <video autoplay id="videoElement"></video>
+  </div>
+  <div class="column">
+    <canvas id="canvasOutput" width="640" height="480"></canvas>
+  </div>
+</div>
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  <div class="form-group">
+    {{ form.submit(class="btn btn-outline-info") }}
+  </div>
+</form>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+  const video = document.getElementById("videoElement");
+  const canvas = document.getElementById("canvasOutput");
+  const context = canvas.getContext("2d")
+  const button = document.getElementById("button");
+  const constraints = { video: true, audio: false };
+
+  button.addEventListener("click", () => {
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    $.post("http://127.0.0.1:5000/save_photo",
+      {
+        label: "video capture",
+        content: canvas.toDataURL("image/png")
+      },
+      function (data, status) {
+        valuse = status + ":" + data;
+      });
+  });
+
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(function (mediaStream) {
+      video.srcObject = mediaStream;
+    });
+
+</script>
+{% endblock script %}
